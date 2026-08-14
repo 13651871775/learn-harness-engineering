@@ -9,6 +9,7 @@ A desktop application for managing a personal knowledge base. Users import text 
 ### Document Management
 - Import `.txt` and `.md` files through a file picker in the ImportPanel.
 - View document metadata: title, filename, size, import date, indexing status.
+- View extracted content metrics: word count, line count, file type, paragraph count, char count.
 - View full document content in a scrollable text viewer.
 - Browse a list of all imported documents in a sidebar panel.
 - Delete documents and their associated data (content file, original copy).

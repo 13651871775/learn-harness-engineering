@@ -1,5 +1,14 @@
 /** Cross-boundary type definitions shared between main, preload, and renderer. */
 
+/** Derived metrics extracted from a document's raw content on import. */
+export interface DocumentMetadata {
+  wordCount: number;
+  lineCount: number;
+  fileType: string;
+  paragraphCount: number;
+  charCount: number;
+}
+
 export interface Document {
   id: string;
   title: string;
@@ -8,6 +17,7 @@ export interface Document {
   size: number;
   status: 'imported' | 'indexing' | 'indexed' | 'error';
   chunks?: number;
+  metadata?: DocumentMetadata;
 }
 
 export interface Chunk {

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { Document } from '../shared/types';
+import { Document, DocumentMetadata } from '../shared/types';
 import { PersistenceService } from './persistence-service';
 
 const DOCUMENTS_META = 'documents-meta.json';
@@ -36,6 +36,7 @@ export class DocumentService {
       importedAt: new Date().toISOString(),
       size: stats.size,
       status: 'imported',
+      metadata: this.extractMetadata(content, filename),
     };
 
     // Copy file to data directory
@@ -56,6 +57,17 @@ export class DocumentService {
   getDocument(id: string): Document | null {
     const docs = this.listDocuments();
     return docs.find(d => d.id === id) ?? null;
+  }
+
+  /** Extract metadata metrics (word/line/paragraph/char counts, file type) from raw content. */
+  extractMetadata(content: string, filename: string): DocumentMetadata {
+    const trimmed = content.trim();
+    const wordCount = trimmed ? trimmed.split(/\s+/).length : 0;
+    const lineCount = content.length === 0 ? 0 : content.split(/\n/).length;
+    const fileType = path.extname(filename).replace(/^\./, '').toLowerCase() || 'txt';
+    const paragraphCount = content.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+    const charCount = content.length;
+    return { wordCount, lineCount, fileType, paragraphCount, charCount };
   }
 
   /** Get the text content of a document. */

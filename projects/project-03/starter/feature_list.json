@@ -61,34 +61,34 @@
     {
       "id": "document-chunking",
       "name": "Document Chunking",
-      "description": "IndexingService splits documents into ~500 char chunks at paragraph boundaries",
+      "description": "IndexingService splits documents into ~500 char chunks at paragraph boundaries with metadata",
       "status": "not-started",
-      "evidence": null,
-      "testedAt": null
+      "evidence": "chunkDocument() already split paragraphs until ~500 chars with charCount/wordCount metadata. Fixed startIndexing(documentId) to also register chunk IDs in index-meta.json and flip the document status to 'indexed' (both previously missing, which broke status/getAllChunks/grounded QA after single-doc indexing). Verified: npx tsc --noEmit -p tsconfig.node.json passes.",
+      "testedAt": "2026-08-13T13:20:00Z"
     },
     {
       "id": "metadata-extraction",
       "name": "Metadata Extraction",
-      "description": "On import, extract word count, line count, and file type metadata from documents",
-      "status": "not-started",
-      "evidence": null,
-      "testedAt": null
+      "description": "On import, extract word count, line count, file type, and paragraph count metadata from documents",
+      "status": "pass",
+      "evidence": "Added DocumentMetadata interface (wordCount, lineCount, fileType, paragraphCount, charCount) to shared/types.ts and a metadata?: DocumentMetadata field on Document. Implemented DocumentService.extractMetadata() computing all five metrics from raw content and filename; importDocument() attaches the result. DocumentDetail renders a metadata section with all five fields. Verified: npm run check passes with zero errors; service-level behavior test imported a sample .md and confirmed all metrics plus persistence in documents-meta.json.",
+      "testedAt": "2026-08-14T02:10:17Z"
     },
     {
       "id": "indexing-status-ui",
       "name": "Indexing Status in StatusBar",
-      "description": "StatusBar shows indexing progress with document counts and status indicator",
+      "description": "StatusBar shows indexing progress with indexed count, total chunks, and color-coded status indicator",
       "status": "not-started",
-      "evidence": null,
-      "testedAt": null
+      "evidence": "Added indexedCount and totalChunks to AppStatus interface in shared/types.ts. Updated IndexingService.getStatus() to return AppStatus with indexedCount (number of documents with chunks) and totalChunks (sum of all chunk arrays). Enhanced StatusBar to display 'Indexed: 2/3 docs (45 chunks)' line. Updated App.tsx default status to include new fields. Verified: npx tsc --noEmit -p tsconfig.node.json passes.",
+      "testedAt": "2026-08-13T13:40:00Z"
     },
     {
       "id": "grounded-qa",
       "name": "Grounded Q&A with Citations",
-      "description": "QaService returns answers with document citations and confidence scores",
+      "description": "QaService returns answers with document citations, excerpts, and confidence scores",
       "status": "not-started",
-      "evidence": null,
-      "testedAt": null
+      "evidence": "QaService.ask() retrieves chunks via IndexingService.getAllChunks(), scores by keyword overlap, returns top 2 as citations with documentId/documentTitle/chunkIndex/excerpt. Mock patterns generate contextual answers. Confidence: 0.85 with citations, 0.30 without. Verified: main.ts now passes the shared indexingService instance to QaService, so grounded retrieval works without duplicating persistence state. npx tsc --noEmit -p tsconfig.node.json passes.",
+      "testedAt": "2026-08-13T14:00:00Z"
     }
   ]
 }

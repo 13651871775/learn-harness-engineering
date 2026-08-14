@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Document, Chunk } from '../../../shared/types';
+import { useEffect, useState } from 'react';
+import { Document, Chunk } from '../../shared/types';
 
 interface Props {
   document: Document;
@@ -46,6 +46,15 @@ export function DocumentDetail({ document, onDelete }: Props) {
         <div>Size: {(document.size / 1024).toFixed(1)} KB</div>
         <div>Status: {document.status}</div>
         {document.chunks !== undefined && <div>Chunks: {document.chunks}</div>}
+        {document.metadata && (
+          <>
+            <div>Word Count: {document.metadata.wordCount}</div>
+            <div>Line Count: {document.metadata.lineCount}</div>
+            <div>File Type: {document.metadata.fileType}</div>
+            <div>Paragraph Count: {document.metadata.paragraphCount}</div>
+            <div>Char Count: {document.metadata.charCount}</div>
+          </>
+        )}
       </div>
 
       <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>

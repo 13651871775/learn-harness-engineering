@@ -84,7 +84,7 @@ The document import flow demonstrates the full IPC data path:
 8. DocumentService:
    a. Validates the file exists
    b. Reads file content and stats
-   c. Creates Document metadata object
+   c. Extracts content metrics (word count, line count, file type, paragraph count, char count) via extractMetadata() and attaches them to the Document metadata
    d. Copies file to documents directory via PersistenceService
    e. Stores extracted text content via PersistenceService
    f. Appends to documents-meta.json
