@@ -106,16 +106,33 @@ Document content viewing adds a dedicated IPC channel:
 6. Content flows back to renderer for display in pre-wrap container
 ```
 
+## Indexing Flow
+
+Document indexing splits a document into chunks, registers them in the index, and flips the document status:
+
+```
+1. User clicks "Index Document" in DocumentDetail (single doc) or triggers a full-library index
+2. DocumentDetail calls window.knowledgeBase.indexing.start(documentId?)
+3. Preload invokes 'indexing:start' IPC
+4. ipc-handlers delegates to IndexingService.startIndexing(documentId?)
+5. IndexingService:
+   a. Reads content/<doc-id>.txt
+   b. Splits content into ~500-char chunks at paragraph boundaries (chunkDocument)
+   c. Writes chunks/<doc-id>.json with charCount/wordCount per chunk
+   d. Registers the chunk IDs in index-meta.json
+   e. Flips the document status to 'indexed' and records its chunk count in documents-meta.json
+6. Status, chunk retrieval, and grounded Q&A all read through index-meta.json
+```
+
 ## Data Storage
 
 ```
 knowledge-base-data/
-  documents-meta.json     # Document metadata array
+  documents-meta.json     # Document metadata array (status flips to 'indexed' after indexing)
   content/
     <doc-id>.txt          # Extracted text content per document
   chunks/
     <doc-id>.json         # Chunk array per document
-  index/
-    index-meta.json       # Mapping of document IDs to chunk IDs
+  index-meta.json         # Mapping of document IDs to chunk IDs
   qa-history.json         # Q&A interaction log
 ```

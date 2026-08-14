@@ -23,6 +23,15 @@
 - Verified: `npm run check` passes; service-level behavior test imported a sample `.md` and confirmed all five metrics plus persistence in `documents-meta.json`.
 - Updated `feature_list.json`: metadata-extraction -> pass.
 
+#### Feature: document-chunking
+
+- `chunkDocument()` already splits at paragraph boundaries until ~500 chars with `charCount`/`wordCount` chunk metadata (from shared foundation).
+- Fixed `startIndexing(documentId)`: it now registers the chunk IDs in `index-meta.json` and flips the document status to `'indexed'` (recording its chunk count). Both were missing, which broke `getStatus()`/`getAllChunks()`/grounded QA after single-document indexing.
+- Full-library `startIndexing()` now flips each newly indexed document's status too.
+- Added an "Indexing Flow" section to `docs/ARCHITECTURE.md` and corrected the data-storage layout (`index-meta.json` lives at the data root, matching the code).
+- Verified: `npm run check` passes; service-level behavior test imported two documents, indexed one individually then both via full-library indexing, and confirmed chunk files, `index-meta.json` registration, status flips, chunk counts, and `getAllChunks()`; re-indexing does not duplicate chunk IDs.
+- Updated `feature_list.json`: document-chunking -> pass.
+
 ### Session 1: 2026-03-30 (10:00 - 13:00)
 
 **Goal**: Implement all four P3 features following one-feature-at-a-time policy.

@@ -62,9 +62,9 @@
       "id": "document-chunking",
       "name": "Document Chunking",
       "description": "IndexingService splits documents into ~500 char chunks at paragraph boundaries with metadata",
-      "status": "not-started",
-      "evidence": "chunkDocument() already split paragraphs until ~500 chars with charCount/wordCount metadata. Fixed startIndexing(documentId) to also register chunk IDs in index-meta.json and flip the document status to 'indexed' (both previously missing, which broke status/getAllChunks/grounded QA after single-doc indexing). Verified: npx tsc --noEmit -p tsconfig.node.json passes.",
-      "testedAt": "2026-08-13T13:20:00Z"
+      "status": "pass",
+      "evidence": "chunkDocument() splits at paragraph boundaries until ~500 chars, storing charCount/wordCount per chunk. startIndexing(documentId) now registers chunk IDs in index-meta.json and flips the document status to 'indexed' with its chunk count (both were missing, which broke status/getAllChunks/grounded QA after single-doc indexing); full-library indexing flips statuses too. Verified: npm run check passes; service-level behavior test imported two docs, indexed one individually and both via bulk, and confirmed chunks files, index-meta.json registration, document statuses, and getAllChunks().",
+      "testedAt": "2026-08-14T02:17:34Z"
     },
     {
       "id": "metadata-extraction",

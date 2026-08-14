@@ -31,6 +31,14 @@ export class IndexingService {
       }
       const chunks = this.chunkDocument(documentId, content);
       this.persistence.writeJson(`${CHUNKS_DIR}/${documentId}.json`, chunks);
+
+      // Register chunk IDs in the index so status/getAllChunks/QA can find them
+      const chunksMeta = this.persistence.readJson<Record<string, string[]>>(INDEX_META) ?? {};
+      chunksMeta[documentId] = chunks.map(c => c.id);
+      this.persistence.writeJson(INDEX_META, chunksMeta);
+
+      // Flip the document status to 'indexed'
+      this.setDocumentIndexed(documentId, chunks.length);
       return this.getStatus();
     }
 
@@ -47,10 +55,22 @@ export class IndexingService {
       const chunks = this.chunkDocument(doc.id, content);
       this.persistence.writeJson(`${CHUNKS_DIR}/${doc.id}.json`, chunks);
       chunksMeta[doc.id] = chunks.map(c => c.id);
+      this.setDocumentIndexed(doc.id, chunks.length);
     }
 
     this.persistence.writeJson(INDEX_META, chunksMeta);
     return this.getStatus();
+  }
+
+  /** Set a document's status to 'indexed' and record its chunk count. */
+  private setDocumentIndexed(documentId: string, chunkCount: number): void {
+    const docs = this.persistence.readJson<Document[]>('documents-meta.json') ?? [];
+    const doc = docs.find(d => d.id === documentId);
+    if (doc) {
+      doc.status = 'indexed';
+      doc.chunks = chunkCount;
+      this.persistence.writeJson('documents-meta.json', docs);
+    }
   }
 
   /** Get current indexing status. */
