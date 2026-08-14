@@ -2,6 +2,11 @@
 /// <reference types="react-dom" />
 
 declare global {
+  interface File {
+    /** Electron augments the DOM File with a filesystem path for picked files. */
+    path: string;
+  }
+
   interface Window {
     knowledgeBase: {
       documents: {
