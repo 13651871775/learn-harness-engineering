@@ -3,19 +3,11 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 
-console.log('[dev] Building main process...');
+console.log('[dev] Building main + preload...');
 try {
   execSync('npx tsc -p tsconfig.node.json', { cwd: root, stdio: 'inherit' });
 } catch {
-  console.error('[dev] Main process TypeScript compilation failed');
-  process.exit(1);
-}
-
-console.log('[dev] Bundling preload (sandbox self-contained)...');
-try {
-  execSync('npx vite build --config vite.preload.config.ts', { cwd: root, stdio: 'inherit' });
-} catch {
-  console.error('[dev] Preload bundle failed');
+  console.error('[dev] TypeScript compilation failed');
   process.exit(1);
 }
 

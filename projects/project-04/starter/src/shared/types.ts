@@ -8,6 +8,8 @@ export interface Document {
   size: number;
   status: 'imported' | 'indexing' | 'indexed' | 'error';
   chunks?: number;
+  /** Human-readable error message when status is 'error'. */
+  error?: string;
 }
 
 export interface Chunk {
@@ -41,6 +43,8 @@ export interface AppStatus {
   documentsLoaded: number;
   indexStatus: 'idle' | 'indexing' | 'ready' | 'error';
   lastActivity: string;
+  /** Human-readable error message when indexStatus is 'error'. */
+  error?: string;
 }
 
 /** IPC channel names — single source of truth. */

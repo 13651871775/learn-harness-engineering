@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppStatus } from '../../shared/types';
 
 interface Props {
@@ -38,6 +37,11 @@ export function StatusBar({ status }: Props) {
       <span>Documents: {status.documentsLoaded}</span>
       {status.lastActivity && (
         <span>Last activity: {new Date(status.lastActivity).toLocaleTimeString()}</span>
+      )}
+      {status.indexStatus === 'error' && status.error && (
+        <span style={{ color: '#d9534f', marginLeft: '8px' }}>
+          ⚠ {status.error}
+        </span>
       )}
     </div>
   );

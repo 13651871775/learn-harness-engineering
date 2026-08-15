@@ -5,7 +5,7 @@
   "main": "dist/main/main.js",
   "scripts": {
     "dev": "node scripts/dev.js",
-    "build": "tsc -p tsconfig.node.json && vite build --config vite.preload.config.ts && vite build",
+    "build": "tsc -p tsconfig.node.json && vite build",
     "check": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest"
